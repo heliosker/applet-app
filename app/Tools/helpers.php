@@ -14,7 +14,7 @@ if(!function_exists('result')) {
     function result(object|array|string $data = null, int $status = 200): JsonResponse
     {
         return response()->json(
-            is_null($data) ? ['code' => 1] : ['code' => 1, 'data' => $data],
+            is_null($data) ? ['code' => 200] : ['code' => 200, 'data' => $data],
             $status
         );
     }
@@ -31,7 +31,7 @@ if(!function_exists('error')) {
     function error(string $msg = '参数错误', int $status = 200): JsonResponse
     {
         return response()->json(
-            ['code' => 0, 'message' => $msg],
+            ['code' => $status, 'message' => $msg],
             $status
         );
     }

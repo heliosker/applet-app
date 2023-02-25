@@ -46,6 +46,8 @@ class OpenAiController extends Controller
             'presence_penalty' => 0.6,
         ]);
 
+        // 扣减次数
+
         return result(json_decode($complete,true));
     }
 

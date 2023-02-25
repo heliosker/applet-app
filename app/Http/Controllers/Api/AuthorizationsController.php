@@ -132,6 +132,12 @@ class AuthorizationsController extends Controller
         return result(new UserResource($user));
     }
 
+    /**
+     * 测试Token
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function test(Request $request){
         $id = $request->input('id');
         $user = User::where('id', $id)->first();
