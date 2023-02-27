@@ -38,7 +38,7 @@ class OpenAiController extends Controller
         $open_ai_key = config('open.openai_api_key');
         $open_ai = new OpenAi($open_ai_key);
         $complete = $open_ai->completion([
-            'model' => 'davinci',
+            'model' => config('open.openai_model', 'text-curie-001'),
             'prompt' => $input['prompt'],
             'temperature' => 0.9,
             'max_tokens' => 150,
