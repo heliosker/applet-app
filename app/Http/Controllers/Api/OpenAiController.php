@@ -18,20 +18,20 @@ class OpenAiController extends Controller
      */
     public function ask(Request $request): JsonResponse
     {
-        $input = $request->only('prompt');
+        $input = $request->all('prompt');
 
         $validator = Validator::make($input, [
             'prompt' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return error((string)$validator->errors()->first());
+            return error((string)$validator->errors()->first(), 422);
         }
 
         // 验证次数
         $user = auth('api')->user();
-        if (!$user->checkUsable()){
-            return error('您的可用次数已用完，请先获取使用次数。');
+        if (!$user->checkUsable()) {
+            return error('您的可用次数已用完，请先获取使用次数。', 403);
         }
 
         // 回复内容；
@@ -48,7 +48,8 @@ class OpenAiController extends Controller
 
         // 扣减次数
 
-        return result(json_decode($complete,true));
+        $ret = json_decode($complete, true);
+        return result($ret['choices']);
     }
 
 
