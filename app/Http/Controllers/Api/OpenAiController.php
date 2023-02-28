@@ -49,7 +49,7 @@ class OpenAiController extends Controller
         // 扣减次数
 
         $ret = json_decode($complete, true);
-        return result($ret['choices']);
+        return result($ret);
     }
 
 
