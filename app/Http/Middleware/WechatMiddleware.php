@@ -9,29 +9,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class WechatMiddleware
 {
+
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Request $request
+     * @param Closure $next
+     * @return Response
      */
     public function handle(Request $request, Closure $next): Response
     {
         $token = $request->header('Authorization');
 
+        if (empty($token)) {
+            return error('未授权，请登录后再访问', 401);
+        }
 
         $user = auth('api')->user();
-        dump($user);die;
-
-        if(!$user) {
-            return error('请先登陆', 401);
+        if (!$user) {
+            return error('Token 已失效，请重新获取', 401);
         }
 
-        if($user->status !== 1) {
-            return error('当前账户暂时无法使用，请联系客服');
+        if ($user->block_status == 1) {
+            return error('当前账户暂时无法使用，请联系客服', 403);
         }
 
-        $request->user  = $user;
-        $request->uid   = $user->getKey();
+        $request->user = $user;
+        $request->uid = $user->getKey();
 
         return $next($request);
     }

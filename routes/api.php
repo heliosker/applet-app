@@ -22,24 +22,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
-
-// 通用接口
-Route::namespace('Api')->middleware('api')->prefix('v1')->group(function () {
+Route::namespace('Api')->middleware(['api'])->prefix('v1')->group(function () {
 
     Route::get('token/test', [AuthorizationsController::class, 'test']);
 
+});
+
+// 通用接口
+Route::namespace('Api')->middleware(['api', 'wechat'])->prefix('v1')->group(function () {
 
     Route::post('auth/login', [AuthorizationsController::class, 'login']);
-    Route::get('auth/members', [AuthorizationsController::class, 'members']);
+    Route::get('auth/members', [UserController::class, 'show']);
+    Route::post('auth/members', [UserController::class, 'update']);
 
 
     // 聊天
     Route::post('chat/ask', [OpenAiController::class, 'ask']);
 
     // 活动
-    Route::post('chat/punch-in', [ActivitiesController::class, 'punchIn']);
+    Route::post('activities/punch-in', [ActivitiesController::class, 'punchIn']);
     Route::get('chat/watch-ads', [ActivitiesController::class, 'watchAds']);
 
 });

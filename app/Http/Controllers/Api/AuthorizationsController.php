@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use EasyWeChat\MiniApp\Application;
 
+
 class AuthorizationsController extends Controller
 {
     /**
@@ -19,7 +20,7 @@ class AuthorizationsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','test']]);
+        $this->middleware('auth:api', ['except' => ['login', 'test']]);
     }
 
     /**
@@ -121,16 +122,6 @@ class AuthorizationsController extends Controller
         ]);
     }
 
-    /**
-     * 个人中心
-     *
-     * @return JsonResponse
-     */
-    public function members(): JsonResponse
-    {
-        $user = auth('api')->user();
-        return result(new UserResource($user));
-    }
 
     /**
      * 测试Token
@@ -138,14 +129,15 @@ class AuthorizationsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function test(Request $request){
+    public function test(Request $request)
+    {
         $id = $request->input('id');
         $user = User::where('id', $id)->first();
 
         return result([
             'access_token' => auth('api')->tokenById($user->id),
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60 * 24 * 7
         ]);
     }
 

@@ -10,6 +10,14 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ *
+ * @package App\Models\User
+ *
+ * @property string name 名称
+ * @property string email 邮件
+ * @property string block_status 状态
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -20,12 +28,17 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nick_name',
         'email',
         'is_vip',
         'openid',
         'session_key',
-        'avatar',
+        'avatar_url',
+        'gender',
+        'language',
+        'city',
+        'province',
+        'country',
         'usable_num',
         'block_status',
         'expired_at',
@@ -80,10 +93,10 @@ class User extends Authenticatable implements JWTSubject
     public function checkUsable(): bool
     {
         $expiredAt = Carbon::parse($this->expired_at);
-        if ($this->is_vip && $expiredAt->gt(Carbon::now())){
+        if ($this->is_vip && $expiredAt->gt(Carbon::now())) {
             return true;
         }
-        if ($this->usable_num > 0){
+        if ($this->usable_num > 0) {
             return true;
         }
         return false;
