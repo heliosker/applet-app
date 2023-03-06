@@ -26,12 +26,14 @@ Route::namespace('Api')->middleware(['api'])->prefix('v1')->group(function () {
 
     Route::get('token/test', [AuthorizationsController::class, 'test']);
 
+    Route::post('auth/login', [AuthorizationsController::class, 'login']);
+    Route::post('activities/invite', [ActivitiesController::class, 'invite']);
 });
 
 // 通用接口
 Route::namespace('Api')->middleware(['api', 'wechat'])->prefix('v1')->group(function () {
 
-    Route::post('auth/login', [AuthorizationsController::class, 'login']);
+
     Route::get('auth/members', [UserController::class, 'show']);
     Route::post('auth/members', [UserController::class, 'update']);
 

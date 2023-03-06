@@ -55,7 +55,7 @@ class AuthorizationsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return error((string)$validator->errors()->first());
+            return error((string)$validator->errors()->first(), 422);
         }
 
 
@@ -97,12 +97,12 @@ class AuthorizationsController extends Controller
                 'grant_type' => 'authorization_code'
             ]);
         } catch (\Exception $e) {
-            return error($e->getMessage());
+            return error($e->getMessage(), 422);
         }
 
         $data = $response->toArray();
         if (isset($data['errcode'])) {
-            return error($data['errmsg']);
+            return error($data['errmsg'], 422);
         }
 
         if (!$user = User::where('openid', $data['openid'])->first()) {
@@ -111,7 +111,7 @@ class AuthorizationsController extends Controller
             $user->session_key = $data['session_key'];
 
             if (!$user->save()) {
-                return error_system();
+                return error('用户信息更新异常.', 500);
             }
         }
 

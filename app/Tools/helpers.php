@@ -37,15 +37,3 @@ if(!function_exists('error')) {
     }
 }
 
-if(!function_exists('error_system')) {
-    /**
-     * 返回系统错误
-     *
-     * @param int|null $number  编号
-     * @return JsonResponse
-     */
-    function error_system(int $number = null): JsonResponse
-    {
-        return error(is_null($number) ? '系统错误' : '系统错误[' . $number . ']');
-    }
-}

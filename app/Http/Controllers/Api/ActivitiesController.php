@@ -22,10 +22,18 @@ class ActivitiesController extends Controller
         if (!$record) {
             $ret = SignRecord::create(['user_id' => $user->id]);
             // 发放奖励
-            
-            return result($ret);
+            if ($ret && $user->incrUsableNum()) {
+                return result(['sign_record' => 1, 'message' => '签到成功.']);
+            }
+            return result(['sign_record' => 0, 'message' => '签到失败,请稍后重试.']);
         }
         return error('你今天已签过了.', 422);
+    }
+
+    public function invite(Request $request)
+    {
+        dump($request->all());
+
     }
 
     public function watchAds()
