@@ -118,6 +118,7 @@ class AuthorizationsController extends Controller
         return result([
             'access_token' => auth('api')->tokenById($user->id),
             'token_type' => 'bearer',
+            'open_id' => $user->openid,
             'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }
