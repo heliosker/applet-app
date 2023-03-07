@@ -38,7 +38,7 @@ class UserResource extends JsonResource
         }
         return [
             'id' => $this->id,
-            'open_id' => $this->open_id,
+            'open_id' => $this->openid,
             'nick_name' => $this->nick_name,
             'avatar_url' => $this->avatar_url,
             'is_vip' => $this->is_vip,

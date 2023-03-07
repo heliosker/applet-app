@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\SignRecord;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,10 +30,21 @@ class ActivitiesController extends Controller
         return error('你今天已签过了.', 422);
     }
 
-    public function invite(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function invite(Request $request): JsonResponse
     {
-        dump($request->all());
+        $input = $request->all();
+        $inviteeId = $input['invitee_id'];
+        $inviterId = $input['inviter_id'];
 
+        if ($inviter = User::where('openid', $inviterId)->first()) {
+            $inviter->incrUsableNum();
+            return result('邀请奖励已发放.');
+        }
+        return error('参数错误.', 422);
     }
 
     public function watchAds()
