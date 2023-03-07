@@ -18,14 +18,13 @@ class ActivitiesController extends Controller
     public function punchIn(Request $request): JsonResponse
     {
         $user = auth('api')->user();
-        $record = SignRecord::where('user_id', $user->id)->where('created_at', '<=', Carbon::now()->endOfDay())->where('created_at', '>=', Carbon::now()->startOfDay())->first();
-        if (!$record) {
+        if (!SignRecord::isTodaySignedIn($user->id)) {
             $ret = SignRecord::create(['user_id' => $user->id]);
             // 发放奖励
             if ($ret && $user->incrUsableNum()) {
-                return result(['sign_record' => 1, 'message' => '签到成功.']);
+                return result(['sign_record' => SignRecord::SIGNED_IN, 'message' => '签到成功.']);
             }
-            return result(['sign_record' => 0, 'message' => '签到失败,请稍后重试.']);
+            return result(['sign_record' => SignRecord::NOT_SIGNED_IN, 'message' => '签到失败,请稍后重试.']);
         }
         return error('你今天已签过了.', 422);
     }

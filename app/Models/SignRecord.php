@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,5 +30,31 @@ class SignRecord extends Model
     protected $fillable = [
         'user_id',
     ];
+
+    /**
+     * 已签到
+     */
+    const SIGNED_IN = true;
+
+    /**
+     * 未签到
+     */
+    const NOT_SIGNED_IN = false;
+
+
+    /**
+     * @param $uid
+     * @return bool
+     */
+    static function isTodaySignedIn($uid): bool
+    {
+        if (self::where('user_id', $uid)
+            ->where('created_at', '<=', Carbon::now()->endOfDay())
+            ->where('created_at', '>=', Carbon::now()->startOfDay())
+            ->first()) {
+            return true;
+        }
+        return false;
+    }
 
 }

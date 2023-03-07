@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\SignRecord;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,6 +38,7 @@ class UserResource extends JsonResource
         }
         return [
             'id' => $this->id,
+            'open_id' => $this->open_id,
             'nick_name' => $this->nick_name,
             'avatar_url' => $this->avatar_url,
             'is_vip' => $this->is_vip,
@@ -53,6 +55,7 @@ class UserResource extends JsonResource
             'city' => $this->city ?? '',
             'province' => $this->province ?? '',
             'country' => $this->country ?? '',
+            'sign_record' => SignRecord::isTodaySignedIn($this->id) ? SignRecord::SIGNED_IN : SignRecord::NOT_SIGNED_IN,
             'expired_at' => (string)$this->expired_at,
             'created_at' => (string)$this->created_at,
             'updated_at' => (string)$this->updated_at
