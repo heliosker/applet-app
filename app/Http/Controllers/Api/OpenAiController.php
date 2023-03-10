@@ -45,9 +45,9 @@ class OpenAiController extends Controller
             $openAi->setBaseURL($baseUrl);
         }
 
-
         // history
-        if ($chatId = $input['chat_id']) {
+        if (isset($input['chat_id'])) {
+            $chatId = $input['chat_id'];
             if ($last = ChatHistory::lastMessages($chatId)) {
                 $messages = $last;
             }
