@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ShareHistories;
 use App\Models\SignRecord;
 use App\Models\User;
 use Carbon\Carbon;
@@ -36,15 +37,30 @@ class ActivitiesController extends Controller
      */
     public function invite(Request $request): JsonResponse
     {
-        $input = $request->all();
-        $inviteeId = $input['invitee_id'];
-        $inviterId = $input['inviter_id'];
+        try {
+            $input = $request->all();
+            // 受邀者
+            $inviteeId = $input['invitee_id'];
+            // 邀请人
+            $inviterId = $input['inviter_id'];
 
-        if ($inviter = User::where('openid', $inviterId)->first()) {
-            $inviter->incrUsableNum();
-            return result('邀请奖励已发放.');
+            if ($inviteeId == $inviterId) {
+                return error('邀请自己没有奖励哦.', 422);
+            }
+
+            $whereData = ['inviter_id' => $inviterId, 'invitee_id' => $inviteeId];
+            $inviter = ShareHistories::firstOrCreate($whereData, $whereData);
+            if ($inviter->wasRecentlyCreated) {
+                $user = User::where('openid', $inviterId)->first();
+                $user->incrUsableNum();
+                return result('邀请奖励已发放.');
+            }
+
+            return error('已经邀请过该朋友了，换个人试试.', 422);
+
+        } catch (\Exception $e) {
+            return error($e->getMessage(), 500);
         }
-        return error('参数错误.', 422);
     }
 
     public function watchAds()

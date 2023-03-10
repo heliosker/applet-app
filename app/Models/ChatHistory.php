@@ -12,8 +12,30 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory query()
- * @mixin \Eloquent
  * @mixin IdeHelperChatHistory
+ * @property int $id
+ * @property string $chat_id 消息ID
+ * @property int $user_id 用户ID
+ * @property string $object object
+ * @property string $model 模型
+ * @property string $human 人类问题
+ * @property string $ai AI 回答
+ * @property int $created 创建时间
+ * @property mixed|null $usage 使用量
+ * @property \Illuminate\Support\Carbon|null $created_at 创建时间
+ * @property \Illuminate\Support\Carbon|null $updated_at 更新时间
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereAi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereChatId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereCreated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereHuman($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereModel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereObject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereUsage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereUserId($value)
+ * @mixin \Eloquent
  */
 class ChatHistory extends Model
 {

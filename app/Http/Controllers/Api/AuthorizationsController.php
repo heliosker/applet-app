@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Resources\Api\UserResource;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -119,7 +120,7 @@ class AuthorizationsController extends Controller
             'access_token' => auth('api')->tokenById($user->id),
             'token_type' => 'bearer',
             'open_id' => $user->openid,
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => (string)Carbon::now()->addMinutes(auth('api')->factory()->getTTL())
         ]);
     }
 
@@ -138,7 +139,7 @@ class AuthorizationsController extends Controller
         return result([
             'access_token' => auth('api')->tokenById($user->id),
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60 * 24 * 7
+            'expires_in' => (string)Carbon::now()->addMinutes(auth('api')->factory()->getTTL())
         ]);
     }
 
