@@ -39,7 +39,7 @@ Route::namespace('Api')->middleware(['api', 'wechat'])->prefix('v1')->group(func
 
 
     // 聊天
-    Route::post('chat/ask', [OpenAiController::class, 'ask']);
+    Route::post('chat/completions', [OpenAiController::class, 'completions']);
 
     // 活动
     Route::post('activities/punch-in', [ActivitiesController::class, 'punchIn']);

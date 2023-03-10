@@ -14,5 +14,10 @@ return [
     'openai_model' => env('OPENAI_MODEL', ''),
 
 
+    /**
+     * 代理 URL
+     */
+    'openai_base_url' => env('OPENAI_BASE_URL', ''),
+
 
 ];
