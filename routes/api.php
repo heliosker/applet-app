@@ -22,17 +22,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::namespace('Api')->middleware(['api'])->prefix('v1')->group(function () {
+Route::namespace('Api')->prefix('v1')->group(function () {
 
     Route::get('token/test', [AuthorizationsController::class, 'test']);
 
     Route::post('auth/login', [AuthorizationsController::class, 'login']);
+
     Route::post('activities/invite', [ActivitiesController::class, 'invite']);
+
 });
 
-// 通用接口
-Route::namespace('Api')->middleware(['api', 'wechat'])->prefix('v1')->group(function () {
 
+Route::namespace('Api')->middleware(['auth:api'])->prefix('v1')->group(function () {
+
+    Route::post('token/validate', [AuthorizationsController::class, 'check']);
 
     Route::get('auth/members', [UserController::class, 'show']);
     Route::post('auth/members', [UserController::class, 'update']);

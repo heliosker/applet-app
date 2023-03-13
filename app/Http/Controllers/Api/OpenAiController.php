@@ -70,11 +70,17 @@ class OpenAiController extends Controller
             $complete = $openAi->chat([
                 'model' => config('open.openai_model', 'gpt-3.5-turbo'),
                 'messages' => $messages,
-                'temperature' => 1.0,
-                'max_tokens' => 4000,
+                'temperature' => 0,
+//                'max_tokens' => 4000,
                 'frequency_penalty' => 0,
                 'presence_penalty' => 0,
             ]);
+
+            // 响应错误
+            $completeArr = json_decode($complete, true);
+            if (isset($completeArr['error'])) {
+                return error($completeArr['error']['message'], 500);
+            }
 
             // chat history
             if ($ch = ChatHistory::write($complete, $input['prompt'], $user->id)) {
@@ -82,7 +88,7 @@ class OpenAiController extends Controller
                 $user->decrUsableNum();
                 return result(new ChatHistoryResource($ch));
             }
-            
+
             return error('服务器睡着了，请稍后再试', 500);
         } catch (\Exception $e) {
             return error($e->getMessage(), 500);

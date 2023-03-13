@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use EasyWeChat\MiniApp\Application;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class AuthorizationsController extends Controller
@@ -126,7 +127,7 @@ class AuthorizationsController extends Controller
 
 
     /**
-     * 测试Token
+     * 获取 Token
      *
      * @param Request $request
      * @return JsonResponse
@@ -141,6 +142,12 @@ class AuthorizationsController extends Controller
             'token_type' => 'bearer',
             'expires_in' => (string)Carbon::now()->addMinutes(auth('api')->factory()->getTTL())
         ]);
+    }
+
+    public function check()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        return result($user);
     }
 
 }

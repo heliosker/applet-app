@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
@@ -53,28 +54,28 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Exception $exception
+     * @param Request $request
+     * @param Exception|Throwable $e
      * @return JsonResponse
      * @throws Throwable
      */
-    public function render($request, Exception|Throwable $exception): JsonResponse
+    public function render($request, Exception|Throwable $e): JsonResponse
     {
         try {
             // 参数验证错误的异常，我们需要返回 400 的 http code 和一句错误信息
-            if ($exception instanceof ValidationException) {
-                return error(array_first(array_collapse($exception->errors())),400);
+            if ($e instanceof ValidationException) {
+                return error(array_first(array_collapse($e->errors())), 422);
             }
 
             // 用户认证的异常，我们需要返回 401 的 http code 和错误信息
-            if ($exception instanceof AuthenticationException) {
-                return error($exception->getMessage(),401);
+            if ($e instanceof AuthenticationException) {
+                return error($e->getMessage(), 401);
             }
-        }catch (Exception $exception){
-            return error($exception->getMessage(),500);
+        } catch (Exception $e) {
+            return error($e->getMessage(), 500);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
 

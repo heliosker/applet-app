@@ -84,7 +84,8 @@ class ChatHistory extends Model
      */
     static function write(string $complete, string $prompt, int $userId): ChatHistory|bool
     {
-        if ($chat = json_decode($complete, true)) {
+        $chat = json_decode($complete, true);
+        if ($chat && is_array($chat)) {
             $ch = new self();
             $ch->human = $prompt;
             $ch->chat_id = $chat['id'];
