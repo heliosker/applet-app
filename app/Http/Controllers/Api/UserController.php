@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\UserResource;
+use App\Http\Resources\Api\UserTidyResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,6 +22,18 @@ class UserController extends Controller
     {
         $user = auth('api')->user();
         return result(new UserResource($user));
+    }
+
+
+    /**
+     * 获取精简信息
+     *
+     * @return JsonResponse
+     */
+    public function tidy(): JsonResponse
+    {
+        $user = auth('api')->user();
+        return result(new UserTidyResource($user));
     }
 
     /**
@@ -52,5 +65,5 @@ class UserController extends Controller
         }
         return error('Noting.', 200);
     }
-    
+
 }

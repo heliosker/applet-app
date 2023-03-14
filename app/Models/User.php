@@ -17,7 +17,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $nick_name 昵称
  * @property string $email 邮箱
  * @property int $gender 性别
- * @property int $is_vip 是否会员
  * @property string $openid OPENID
  * @property string $session_key SESSION KEY
  * @property string $avatar_url 头像
@@ -73,7 +72,6 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'nick_name',
         'email',
-        'is_vip',
         'openid',
         'session_key',
         'avatar_url',
@@ -156,8 +154,8 @@ class User extends Authenticatable implements JWTSubject
      */
     public function checkUsable(): bool
     {
-        $expiredAt = Carbon::parse($this->expired_at);
-        if ($this->is_vip && $expiredAt->gt(Carbon::now())) {
+        // IS VIP ?
+        if (Carbon::parse($this->expired_at)->gt(Carbon::now())) {
             return true;
         }
         if ($this->usable_num > 0) {

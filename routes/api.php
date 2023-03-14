@@ -38,6 +38,7 @@ Route::namespace('Api')->middleware(['auth:api'])->prefix('v1')->group(function 
     Route::post('token/validate', [AuthorizationsController::class, 'check']);
 
     Route::get('auth/members', [UserController::class, 'show']);
+    Route::get('auth/tidies', [UserController::class, 'tidy']);
     Route::post('auth/members', [UserController::class, 'update']);
 
 

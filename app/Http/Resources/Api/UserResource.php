@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api;
 
 use App\Models\SignRecord;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -41,7 +42,7 @@ class UserResource extends JsonResource
             'open_id' => $this->openid,
             'nick_name' => $this->nick_name,
             'avatar_url' => $this->avatar_url,
-            'is_vip' => $this->is_vip,
+            'is_vip' => Carbon::now()->greaterThan(Carbon::parse($this->expired_at)) ? false : true,
             'usable_num' => $this->usable_num,
             'block_status' => [
                 'key' => $this->block_status,
