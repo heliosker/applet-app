@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\IndexController;
 use App\Http\Controllers\Api\OpenAiController;
 use App\Http\Controllers\Api\ActivitiesController;
 use App\Http\Controllers\Api\AuthorizationsController;
@@ -26,6 +27,9 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
     Route::get('token/test', [AuthorizationsController::class, 'test']);
 
+    Route::get('index/banner', [IndexController::class, 'banner']);
+    Route::get('index/share', [IndexController::class, 'share']);
+
     Route::post('auth/login', [AuthorizationsController::class, 'login']);
 
     Route::post('activities/invite', [ActivitiesController::class, 'invite']);
@@ -38,7 +42,7 @@ Route::namespace('Api')->middleware(['auth:api'])->prefix('v1')->group(function 
     Route::post('token/validate', [AuthorizationsController::class, 'check']);
 
     Route::get('auth/members', [UserController::class, 'show']);
-    Route::get('auth/tidies', [UserController::class, 'tidy']);
+    Route::get('members/parts', [UserController::class, 'part']);
     Route::post('auth/members', [UserController::class, 'update']);
 
 

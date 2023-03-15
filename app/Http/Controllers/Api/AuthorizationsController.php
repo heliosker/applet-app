@@ -110,6 +110,7 @@ class AuthorizationsController extends Controller
         if (!$user = User::where('openid', $data['openid'])->first()) {
             $user = new User;
             $user->openid = $data['openid'];
+            $user->usable_num = 10; // 默认初始化 10
             $user->session_key = $data['session_key'];
 
             if (!$user->save()) {

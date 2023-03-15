@@ -30,7 +30,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function tidy(): JsonResponse
+    public function part(): JsonResponse
     {
         $user = auth('api')->user();
         return result(new UserTidyResource($user));
