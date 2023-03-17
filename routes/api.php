@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\IndexController;
+use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\OpenAiController;
 use App\Http\Controllers\Api\ActivitiesController;
 use App\Http\Controllers\Api\AuthorizationsController;
@@ -26,6 +27,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::namespace('Api')->prefix('v1')->group(function () {
 
     Route::get('token/test', [AuthorizationsController::class, 'test']);
+
+    Route::get('upload/token', [UploadController::class, 'token']);
 
     Route::get('index/banner', [IndexController::class, 'banner']);
     Route::get('index/share', [IndexController::class, 'share']);
