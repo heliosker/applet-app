@@ -36,7 +36,7 @@ class OpenAiController extends Controller
             // 验证次数
             $user = auth('api')->user();
             if (!$user->checkUsable()) {
-                return error('您的可用次数已用完，请先获取使用次数。', 403);
+                return error('您的积分已用完，请先获取积分。', 403);
             }
 
             // 回复内容；
@@ -85,7 +85,7 @@ class OpenAiController extends Controller
             // chat history
             if ($ch = ChatHistory::write($complete, $input['prompt'], $user->id)) {
                 // 扣减次数
-                $user->decrUsableNum();
+                $user->decrUsableNum(1, '文字聊天');
                 return result(new ChatHistoryResource($ch));
             }
 
@@ -93,6 +93,18 @@ class OpenAiController extends Controller
         } catch (\Exception $e) {
             return error($e->getMessage(), 500);
         }
+    }
+
+    /**
+     * Chat history
+     * @return JsonResponse
+     */
+    public function histories(): JsonResponse
+    {
+        $user = auth('api')->user();
+
+        $histories = ChatHistory::where('user_id', $user->id)->orderBy('id', 'desc')->paginate();
+        return result(ChatHistoryResource::collection($histories));
     }
 
 

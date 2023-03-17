@@ -128,22 +128,38 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * @param int $incrNum
+     * @param string $reason
      * @return bool
      */
-    public function incrUsableNum(int $incrNum = 1): bool
+    public function incrUsableNum(int $incrNum = 1, string $reason = 'Nothing'): bool
     {
         $this->usable_num += $incrNum;
+        UsageRecords::create([
+            'user_id' => $this->id,
+            'variable' => $incrNum,
+            'original' => $this->usable_num,
+            'usable' => $this->usable_num + $incrNum,
+            'reason' => $reason,
+        ]);
         return $this->save();
     }
 
 
     /**
      * @param int $decrNum
+     * @param string $reason
      * @return bool
      */
-    public function decrUsableNum(int $decrNum = 1): bool
+    public function decrUsableNum(int $decrNum = 1, string $reason = 'Nothing'): bool
     {
         $this->usable_num -= $decrNum;
+        UsageRecords::create([
+            'user_id' => $this->id,
+            'variable' => $decrNum,
+            'original' => $this->usable_num,
+            'usable' => $this->usable_num - $decrNum,
+            'reason' => $reason,
+        ]);
         return $this->save();
     }
 

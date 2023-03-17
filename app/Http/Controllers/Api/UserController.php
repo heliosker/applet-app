@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\UserResource;
 use App\Http\Resources\Api\UserTidyResource;
+use App\Http\Resources\UsageRecordsResource;
+use App\Models\UsageRecords;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Orhanerday\OpenAi\OpenAi;
 
 class UserController extends Controller
 {
@@ -34,6 +35,16 @@ class UserController extends Controller
     {
         $user = auth('api')->user();
         return result(new UserTidyResource($user));
+    }
+
+    /**
+     * Usages records
+     * @return JsonResponse
+     */
+    public function usages(): JsonResponse
+    {
+        $user = auth('api')->user();
+        return result(UsageRecordsResource::collection(UsageRecords::where('user_id', $user->id)->paginate()));
     }
 
     /**

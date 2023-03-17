@@ -15,9 +15,8 @@ class IndexController extends Controller
     public function banner(): JsonResponse
     {
         $data = [
-            ['banner_url' => 'https://images.helloadmin.cn/banner/banner_url_01.jpg', 'title' => 'title 01'],
-            ['banner_url' => 'https://images.helloadmin.cn/banner/banner_url_02.jpg', 'title' => 'title 02'],
-            ['banner_url' => 'https://images.helloadmin.cn/banner/banner_url_03.jpg', 'title' => 'title 03'],
+            ['banner_url' => 'https://images.helloadmin.cn/images/banner/banner_url_01.jpeg', 'title' => 'title 01'],
+            ['banner_url' => 'https://images.helloadmin.cn/images/share/share_url_01.png', 'title' => '家人们，ChatGPT体验下？'],
         ];
 
         return result($data);
@@ -30,8 +29,8 @@ class IndexController extends Controller
     public function share(): JsonResponse
     {
         $data = [
-            'title' => '这里是标题',
-            'image_url' => 'https://images.helloadmin.cn/share/share_url_01.jpg',
+            'title' => '家人们，ChatGPT体验下？',
+            'image_url' => 'https://images.helloadmin.cn/images/share/share_url_01.png',
             'path' => 'path/index'
         ];
 

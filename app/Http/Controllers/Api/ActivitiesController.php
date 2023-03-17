@@ -23,7 +23,7 @@ class ActivitiesController extends Controller
         if (!SignRecord::isTodaySignedIn($user->id)) {
             $ret = SignRecord::create(['user_id' => $user->id]);
             // 发放奖励
-            if ($ret && $user->incrUsableNum()) {
+            if ($ret && $user->incrUsableNum(1, '签到赠送')) {
                 return result(['sign_record' => SignRecord::SIGNED_IN, 'message' => '签到成功.']);
             }
             return result(['sign_record' => SignRecord::NOT_SIGNED_IN, 'message' => '签到失败,请稍后重试.']);
@@ -45,18 +45,21 @@ class ActivitiesController extends Controller
             $inviterId = $input['inviter_id'];
 
             if ($inviteeId == $inviterId) {
-                return error('邀请自己没有奖励哦.', 422);
+                return result('Nothing');
+//                return error('邀请自己没有奖励哦.', 422);
             }
 
             $whereData = ['inviter_id' => $inviterId, 'invitee_id' => $inviteeId];
             $inviter = ShareHistories::firstOrCreate($whereData, $whereData);
             if ($inviter->wasRecentlyCreated) {
                 $user = User::where('openid', $inviterId)->first();
-                $user->incrUsableNum();
-                return result('邀请奖励已发放.');
+                $user->incrUsableNum(1, '邀请奖励');
+//                return result('邀请奖励已发放.');
+                return result('Nothing');
             }
 
-            return error('已经邀请过该朋友了，换个人试试.', 422);
+            return result('Nothing');
+//            return error('已经邀请过该朋友了，换个人试试.', 422);
 
         } catch (\Exception $e) {
             return error($e->getMessage(), 500);
@@ -65,6 +68,6 @@ class ActivitiesController extends Controller
 
     public function watchAds()
     {
-
+        // Todo
     }
 }

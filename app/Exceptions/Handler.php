@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
      * @return JsonResponse
      * @throws Throwable
      */
-    public function render($request, Exception|Throwable $e): JsonResponse
+    public function render($request, Exception|Throwable $e)
     {
         try {
             // 参数验证错误的异常，我们需要返回 400 的 http code 和一句错误信息

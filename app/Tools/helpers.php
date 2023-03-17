@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 if (!function_exists('result')) {
     /**
@@ -13,10 +15,27 @@ if (!function_exists('result')) {
      */
     function result(object|array|string $data = null, int $status = 200): JsonResponse
     {
-        return response()->json(
-            is_null($data) ? ['code' => $status] : ['code' => $status, 'data' => $data],
-            $status
-        );
+        if ($data instanceof LengthAwarePaginator || $data instanceof AnonymousResourceCollection) {
+            return new JsonResponse([
+                'code' => $status,
+                'data' => [
+                    'items' => $data->items(),
+                    'meta' => [
+                        'current_page' => $data->currentPage(),
+                        'from' => $data->firstItem(),
+                        'per_page' => $data->perPage(),
+                        'to' => $data->lastItem(),
+                        'last_page' => $data->lastPage(),
+                        'total' => $data->total(),
+                    ],
+                ],
+            ], $status);
+        } else {
+            return new JsonResponse([
+                'code' => $status,
+                'data' => $data ? $data : []
+            ], $status);
+        }
     }
 }
 

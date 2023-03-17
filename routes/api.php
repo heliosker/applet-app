@@ -26,15 +26,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::namespace('Api')->prefix('v1')->group(function () {
 
+    // 测试
     Route::get('token/test', [AuthorizationsController::class, 'test']);
 
+    // 图片上传
     Route::get('upload/token', [UploadController::class, 'token']);
 
+    // 轮播
     Route::get('index/banner', [IndexController::class, 'banner']);
     Route::get('index/share', [IndexController::class, 'share']);
 
+    // 登录
     Route::post('auth/login', [AuthorizationsController::class, 'login']);
 
+    // 邀请
     Route::post('activities/invite', [ActivitiesController::class, 'invite']);
 
 });
@@ -42,15 +47,18 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
 Route::namespace('Api')->middleware(['auth:api'])->prefix('v1')->group(function () {
 
+    // 令牌检测
     Route::post('token/validate', [AuthorizationsController::class, 'check']);
 
+    // 个人信息
+    Route::post('auth/members', [UserController::class, 'update']);
     Route::get('auth/members', [UserController::class, 'show']);
     Route::get('members/parts', [UserController::class, 'part']);
-    Route::post('auth/members', [UserController::class, 'update']);
-
+    Route::get('members/usages', [UserController::class, 'usages']);
 
     // 聊天
     Route::post('chat/completions', [OpenAiController::class, 'completions']);
+    Route::get('chat/histories', [OpenAiController::class, 'histories']);
 
     // 活动
     Route::post('activities/punch-in', [ActivitiesController::class, 'punchIn']);
