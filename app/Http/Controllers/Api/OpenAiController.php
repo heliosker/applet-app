@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\ChatHistoryResource;
+use App\Http\Resources\Api\ImageHistoryResource;
 use App\Models\ChatHistory;
+use App\Models\ImageHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Orhanerday\OpenAi\OpenAi;
 use Illuminate\Http\JsonResponse;
 
@@ -85,7 +88,7 @@ class OpenAiController extends Controller
             // chat history
             if ($ch = ChatHistory::write($complete, $input['prompt'], $user->id)) {
                 // 扣减次数
-                $user->decrUsableNum(1, '文字聊天');
+                $user->decrUsableNum(1, '文字AI');
                 return result(new ChatHistoryResource($ch));
             }
 
@@ -105,6 +108,61 @@ class OpenAiController extends Controller
 
         $histories = ChatHistory::where('user_id', $user->id)->orderBy('id', 'desc')->paginate();
         return result(ChatHistoryResource::collection($histories));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function generations(Request $request): JsonResponse
+    {
+        try {
+
+            $input = $request->all();
+
+            $validator = Validator::make($input, [
+                'prompt' => 'required',
+                'n' => 'int|max:10|min:1',
+                'size' => [
+                    'required',
+                    Rule::in(['256x256', '512x512', '1024x1024']),
+                ],
+                'response_format' => [
+                    'required',
+                    Rule::in(['url', 'b64_json']),
+                ],
+//            'chat_id' => 'string',
+            ]);
+
+            if ($validator->fails()) {
+                return error((string)$validator->errors()->first(), 422);
+            }
+
+
+            $openAiKey = config('open.openai_api_key');
+            $openAi = new OpenAi($openAiKey);
+            if ($baseUrl = config('open.openai_base_url')) {
+                $openAi->setBaseURL($baseUrl);
+            }
+            $complete = $openAi->image($input);
+
+            // 响应错误
+            $completeArr = json_decode($complete, true);
+            if (isset($completeArr['error'])) {
+                return error($completeArr['error']['message'], 500);
+            }
+
+            $user = auth('api')->user();
+            if ($ih = ImageHistory::write($input, $completeArr, $user->id)) {
+                $user->decrUsableNum(1, '图片AI');
+                return result(new ImageHistoryResource($ih));
+            }
+
+            return error('服务器睡着了，请稍后再试', 500);
+
+        } catch (\Exception $e) {
+            return error($e->getMessage(), 500);
+        }
     }
 
 

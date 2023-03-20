@@ -155,7 +155,7 @@ class User extends Authenticatable implements JWTSubject
         $this->usable_num -= $decrNum;
         UsageRecords::create([
             'user_id' => $this->id,
-            'variable' => $decrNum,
+            'variable' => -$decrNum,
             'original' => $this->usable_num,
             'usable' => $this->usable_num - $decrNum,
             'reason' => $reason,

@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 
 /**
  * App\Models\ChatHistory
  *
- * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory query()
- * @mixin IdeHelperChatHistory
  * @property int $id
  * @property string $chat_id 消息ID
  * @property int $user_id 用户ID
@@ -22,8 +19,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $ai AI 回答
  * @property int $created 创建时间
  * @property mixed|null $usage 使用量
- * @property \Illuminate\Support\Carbon|null $created_at 创建时间
- * @property \Illuminate\Support\Carbon|null $updated_at 更新时间
+ * @property Carbon|null $created_at 创建时间
+ * @property Carbon|null $updated_at 更新时间
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory query()
  * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereAi($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatHistory whereCreated($value)

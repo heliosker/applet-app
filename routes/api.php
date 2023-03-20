@@ -58,6 +58,7 @@ Route::namespace('Api')->middleware(['auth:api'])->prefix('v1')->group(function 
 
     // 聊天
     Route::post('chat/completions', [OpenAiController::class, 'completions']);
+    Route::post('images/generations', [OpenAiController::class, 'generations']);
     Route::get('chat/histories', [OpenAiController::class, 'histories']);
 
     // 活动

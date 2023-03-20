@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\UsageRecordsResource;
 use App\Http\Resources\Api\UserResource;
 use App\Http\Resources\Api\UserTidyResource;
-use App\Http\Resources\UsageRecordsResource;
 use App\Models\UsageRecords;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

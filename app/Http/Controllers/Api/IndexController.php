@@ -31,7 +31,7 @@ class IndexController extends Controller
         $data = [
             'title' => '家人们，ChatGPT体验下？',
             'image_url' => 'https://images.helloadmin.cn/images/share/share_url_01.png',
-            'path' => 'path/index'
+            'path' => '/pages/index/index'
         ];
 
         return result($data);
