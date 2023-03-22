@@ -127,6 +127,24 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Vip or not
+     * @return bool
+     */
+    public function getIsVipAttribute(): bool
+    {
+        return Carbon::parse($this->expired_at)->gt(Carbon::now());
+    }
+
+    /**
+     * Sign Record
+     * @return bool
+     */
+    public function getSignRecordAttribute(): bool
+    {
+        return SignRecord::isTodaySignedIn($this->id) ? SignRecord::SIGNED_IN : SignRecord::NOT_SIGNED_IN;
+    }
+
+    /**
      * @param int $incrNum
      * @param string $reason
      * @return bool
@@ -171,7 +189,7 @@ class User extends Authenticatable implements JWTSubject
     public function checkUsable(): bool
     {
         // IS VIP ?
-        if (Carbon::parse($this->expired_at)->gt(Carbon::now())) {
+        if ($this->is_vip) {
             return true;
         }
         if ($this->usable_num > 0) {

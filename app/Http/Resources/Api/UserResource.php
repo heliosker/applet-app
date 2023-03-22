@@ -42,7 +42,7 @@ class UserResource extends JsonResource
             'open_id' => $this->openid,
             'nick_name' => $this->nick_name,
             'avatar_url' => $this->avatar_url,
-            'is_vip' => Carbon::now()->greaterThan(Carbon::parse($this->expired_at)) ? false : true,
+            'is_vip' => $this->is_vip,
             'usable_num' => $this->usable_num,
             'block_status' => [
                 'key' => $this->block_status,
@@ -56,7 +56,7 @@ class UserResource extends JsonResource
             'city' => $this->city ?? '',
             'province' => $this->province ?? '',
             'country' => $this->country ?? '',
-            'sign_record' => SignRecord::isTodaySignedIn($this->id) ? SignRecord::SIGNED_IN : SignRecord::NOT_SIGNED_IN,
+            'sign_record' => $this->sign_record,
             'expired_at' => (string)$this->expired_at,
             'created_at' => (string)$this->created_at,
             'updated_at' => (string)$this->updated_at

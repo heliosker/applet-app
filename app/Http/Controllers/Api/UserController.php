@@ -44,7 +44,7 @@ class UserController extends Controller
     public function usages(): JsonResponse
     {
         $user = auth('api')->user();
-        return result(UsageRecordsResource::collection(UsageRecords::where('user_id', $user->id)->paginate()));
+        return result(UsageRecordsResource::collection(UsageRecords::where('user_id', $user->id)->orderBy('id', 'desc')->paginate()));
     }
 
     /**
