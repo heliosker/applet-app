@@ -18,7 +18,7 @@ class UserTidyResource extends JsonResource
         return [
             'open_id' => $this->openid,
             'usable_num' => $this->usable_num,
-            'is_vip' => Carbon::now()->greaterThan(Carbon::parse($this->expired_at)) ? false : true,
+            'is_vip' => $this->is_vip,
             'expired_at' => (string)$this->expired_at,
         ];
     }
