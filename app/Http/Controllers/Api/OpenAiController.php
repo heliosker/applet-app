@@ -17,6 +17,8 @@ class OpenAiController extends Controller
 {
 
     /**
+     * Chat
+     *
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
@@ -30,6 +32,7 @@ class OpenAiController extends Controller
             $validator = Validator::make($input, [
                 'prompt' => 'required',
                 'chat_id' => 'string',
+                'scene' => 'int|max:2|min:1',
             ]);
 
             if ($validator->fails()) {
@@ -39,7 +42,7 @@ class OpenAiController extends Controller
             // 验证次数
             $user = auth('api')->user();
             if (!$user->checkUsable()) {
-                return error('您的积分已用完，请先获取积分。', 403);
+                return error('您的次数已用完，请先获取次数。', 403);
             }
 
             // 回复内容；
@@ -86,7 +89,7 @@ class OpenAiController extends Controller
             }
 
             // chat history
-            if ($ch = ChatHistory::write($complete, $input['prompt'], $user->id)) {
+            if ($ch = ChatHistory::write($complete, $input['prompt'], $user->id, $input['scene'] ?? ChatHistory::SCENE_CHAT)) {
                 // 扣减次数
                 $user->decrUsableNum(1, '文字AI');
                 return result(new ChatHistoryResource($ch));
@@ -111,6 +114,8 @@ class OpenAiController extends Controller
     }
 
     /**
+     * 绘图AI
+     *
      * @param Request $request
      * @return JsonResponse
      */

@@ -17,6 +17,7 @@ class ChatHistoryResource extends JsonResource
         return [
             'chat_id' => $this->chat_id,
             'model' => $this->model,
+            'scene' => $this->scene,
             'object' => $this->object,
             'human' => $this->human,
             'ai' => $this->ai,

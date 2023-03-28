@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $model 模型
  * @property string $human 人类问题
  * @property string $ai AI 回答
+ * @property string $scene 场景
  * @property int $created 创建时间
  * @property mixed|null $usage 使用量
  * @property Carbon|null $created_at 创建时间
@@ -41,11 +42,16 @@ class ChatHistory extends Model
 {
     use HasFactory;
 
+    const SCENE_CHAT = 1;
+    const SCENE_BABY_NAME = 2;
+
+
     protected $fillable = [
         'user_id',
         'human',
         'ai',
         'chat_id',
+        'scene',
         'object',
         'model',
         'usage',
@@ -80,14 +86,16 @@ class ChatHistory extends Model
      * @param string $complete
      * @param string $prompt
      * @param int $userId
+     * @param int $scene
      * @return ChatHistory|bool
      */
-    static function write(string $complete, string $prompt, int $userId): ChatHistory|bool
+    static function write(string $complete, string $prompt, int $userId, int $scene = self::SCENE_CHAT): ChatHistory|bool
     {
         $chat = json_decode($complete, true);
         if ($chat && is_array($chat)) {
             $ch = new self();
             $ch->human = $prompt;
+            $ch->scene = $scene;
             $ch->chat_id = $chat['id'];
             $ch->object = $chat['object'];
             $ch->created = $chat['created'];
