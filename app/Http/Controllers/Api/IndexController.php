@@ -15,8 +15,8 @@ class IndexController extends Controller
     public function banner(): JsonResponse
     {
         $data = [
-//            ['banner_url' => 'https://images.helloadmin.cn/images/banner/banner_url_01.png', 'title' => 'title 01'],
-//            ['banner_url' => 'hhttps://images.helloadmin.cn/images/banner/banner_url_01.png', 'title' => '家人们，ChatGPT体验下？'],
+            ['banner_url' => 'https://images.helloadmin.cn/images/banner/banner_url_03.png', 'title' => 'title 01'],
+            ['banner_url' => 'hhttps://images.helloadmin.cn/images/banner/banner_url_03.png', 'title' => '家人们，ChatGPT体验下？'],
         ];
 
         return result($data);
