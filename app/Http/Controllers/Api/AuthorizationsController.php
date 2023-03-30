@@ -22,7 +22,7 @@ class AuthorizationsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'test']]);
+        $this->middleware('auth:api', ['except' => ['appletLogin', 'test', 'webLogin']]);
     }
 
     /**
@@ -36,7 +36,7 @@ class AuthorizationsController extends Controller
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function login(Request $request): JsonResponse
+    public function appletLogin(Request $request): JsonResponse
     {
         /**
          *  1、小程序客户端获取code、nick_name、头像。发起wx.request请求
@@ -119,14 +119,43 @@ class AuthorizationsController extends Controller
             $user->incrUsableNum(10, '首次注册赠送');
         }
 
+        return $this->credentials($user->id, $user->openid);
+    }
+
+    /**
+     * Web Token
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function webLogin(Request $request): JsonResponse
+    {
+        $input = $request->only('id');
+
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return error((string)$validator->errors()->first(), 422);
+        }
+
+        if (!$user = User::where('openid', $input['id'])->first()) {
+            return error('错误的参数', 422);
+        }
+
+        return $this->credentials($user->id, $user->openid);
+    }
+
+    protected function credentials(int $id, string $openId): JsonResponse
+    {
         return result([
-            'access_token' => auth('api')->tokenById($user->id),
+            'access_token' => auth('api')->tokenById($id),
             'token_type' => 'bearer',
-            'open_id' => $user->openid,
+            'open_id' => $openId,
             'expires_in' => (string)Carbon::now()->addMinutes(auth('api')->factory()->getTTL())
         ]);
     }
-
 
     /**
      * 获取 Token

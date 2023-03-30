@@ -24,6 +24,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// WEB
+Route::namespace('Api')->prefix('web')->group(function () {
+
+    Route::post('login', [AuthorizationsController::class, 'webLogin']);
+
+});
+
 Route::namespace('Api')->prefix('v1')->group(function () {
 
     // 测试
@@ -40,7 +47,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::get('index/share', [IndexController::class, 'share']);
 
     // 登录
-    Route::post('auth/login', [AuthorizationsController::class, 'login']);
+    Route::post('auth/login', [AuthorizationsController::class, 'appletLogin']);
 
     // 邀请
     Route::post('activities/invite', [ActivitiesController::class, 'invite']);
