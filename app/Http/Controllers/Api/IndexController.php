@@ -16,9 +16,9 @@ class IndexController extends Controller
     {
         $data = [
             "latest" => [
-                'ai_qa' => 0,
-                'baby_name' => 0,
-                'ai_draw' => 1,
+                'ai_qa' => config('AI_QA', 0),
+                'baby_name' => config('BABY_NAME', 0),
+                'ai_draw' => config('AI_DRAW', 0),
             ]];
         return result($data);
     }
