@@ -29,6 +29,9 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     // 测试
     Route::get('token/test', [AuthorizationsController::class, 'test']);
 
+    // 开关
+    Route::get('version', [IndexController::class, 'version']);
+
     // 图片上传
     Route::get('upload/token', [UploadController::class, 'token']);
 

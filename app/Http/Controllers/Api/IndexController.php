@@ -9,6 +9,21 @@ class IndexController extends Controller
 {
 
     /**
+     * Version
+     * @return JsonResponse
+     */
+    public function version(): JsonResponse
+    {
+        $data = [
+            "latest" => [
+                'ai_qa' => 0,
+                'baby_name' => 0,
+                'ai_draw' => 1,
+            ]];
+        return result($data);
+    }
+
+    /**
      * Banner
      * @return JsonResponse
      */
