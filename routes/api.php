@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\AiController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\IndexController;
 use App\Http\Controllers\Api\UploadController;
@@ -30,6 +31,14 @@ Route::namespace('Api')->prefix('web')->group(function () {
     Route::post('login', [AuthorizationsController::class, 'webLogin']);
 
 });
+
+// WEB Token
+Route::namespace('Api')->middleware(['auth:api'])->prefix('web')->group(function () {
+
+    Route::get('chat/completions', [AiController::class, 'completions']);
+
+});
+
 
 Route::namespace('Api')->prefix('v1')->group(function () {
 
