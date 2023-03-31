@@ -59,6 +59,31 @@ class ChatHistory extends Model
     ];
 
     /**
+     * @param int $userId
+     * @param int $sessionId
+     * @return array
+     */
+    static function context(int $userId, int $sessionId = 0): array
+    {
+        $chats = self::where('user_id', $userId)->orderBy('id', 'desc')->take(5)->get();
+        $messages = [];
+        if ($chats) {
+            foreach ($chats as $item) {
+                $messages[] = [
+                    "role" => "user",
+                    "content" => $item->human,
+                ];
+                $messages[] = [
+                    "role" => "assistant",
+                    "content" => $item->ai,
+                ];
+            }
+            return $messages;
+        }
+        return $messages;
+    }
+
+    /**
      * @param $chatId
      * @return array|null
      */
@@ -80,6 +105,23 @@ class ChatHistory extends Model
         }
 
         return null;
+    }
+
+    /**
+     * @param string $prompt
+     * @param string $answer
+     * @param int $userId
+     * @param int $scene
+     * @return bool
+     */
+    static function webWrite(string $prompt, string $answer, int $userId, int $scene = self::SCENE_CHAT): bool
+    {
+        $ch = new self();
+        $ch->human = $prompt;
+        $ch->scene = $scene;
+        $ch->ai = $answer;
+        $ch->user_id = $userId;
+        return $ch->save();
     }
 
     /**
