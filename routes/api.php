@@ -35,6 +35,7 @@ Route::namespace('Api')->prefix('web')->group(function () {
 // WEB Token
 Route::namespace('Api')->middleware(['auth:api'])->prefix('web')->group(function () {
 
+    Route::post('chat/prepare', [AiController::class, 'prepare']);
     Route::get('chat/completions', [AiController::class, 'completions']);
 
 });

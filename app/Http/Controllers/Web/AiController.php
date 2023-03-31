@@ -10,6 +10,11 @@ use App\Http\Controllers\Controller;
 class AiController extends Controller
 {
 
+    public function prepare(Request $request)
+    {
+
+    }
+
     public function completions(Request $request)
     {
 
@@ -26,13 +31,18 @@ class AiController extends Controller
 
         $openAi = new OpenAi(config('open.openai_api_key'));
 
+        $messages[] = [
+            "role" => "user",
+            "content" => $input['prompt']
+        ];
+
         $opts = [
-            'prompt' => $input['prompt'],
-//            'model' => config('open.openai_model', 'gpt-3.5-turbo'),
-            'temperature' => 0.9,
+            'model' => config('open.openai_model', 'gpt-3.5-turbo'),
+            'messages' => $messages,
+            'temperature' => 0,
             "max_tokens" => 150,
             "frequency_penalty" => 0,
-            "presence_penalty" => 0.6,
+            "presence_penalty" => 0,
             "stream" => true,
         ];
 
@@ -43,9 +53,14 @@ class AiController extends Controller
             $openAi->setBaseURL($baseUrl);
         }
 
-
-        $openAi->completion($opts, function ($curl_info, $data) {
-            echo $data . "<br><br>";
+        $openAi->chat($opts, function ($curl_info, $data) {
+            $complete = json_decode($data);
+            if (isset($complete->error)) {
+                echo "event: error" . PHP_EOL;
+                echo "data: {$complete->error->message}";
+            } else {
+                echo $data;
+            }
             echo PHP_EOL;
             ob_flush();
             flush();
