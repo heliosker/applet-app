@@ -20,4 +20,14 @@ return [
     'openai_base_url' => env('OPENAI_BASE_URL', ''),
 
 
+    /**
+     * ON-OFF
+     */
+    'ai_qa' => env('AI_QA', 0),
+
+    'baby_name' => env('BABY_NAME', 0),
+
+    'ai_draw' => env('AI_DRAW', 0),
+
+
 ];
