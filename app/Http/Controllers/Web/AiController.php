@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Models\ChatHistory;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Orhanerday\OpenAi\OpenAi;
@@ -12,13 +13,13 @@ use App\Http\Controllers\Controller;
 class AiController extends Controller
 {
 
-    public function prepare(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function prepare(Request $request): JsonResponse
     {
         $user = auth('api')->user();
-
-        $ret = ChatHistory::context($user->id);
-        dump($ret);
-
         // 验证次数
         if (!$user->checkUsable()) {
             return error('您的次数已用完，请先获取次数。', 403);
@@ -35,29 +36,23 @@ class AiController extends Controller
 
         $validator = Validator::make($input, [
             'prompt' => 'required',
+            'messages' => 'required',
             'scene' => 'int|max:2|min:1',
         ]);
 
         if ($validator->fails()) {
-            return error((string)$validator->errors()->first(), 422);
+            $err = (string)$validator->errors()->first();
+            echo "event: error" . PHP_EOL;
+            echo "data: $err";
+            exit();
         }
+
         $user = auth('api')->user();
-
         $openAi = new OpenAi(config('open.openai_api_key'));
-
-        $histories = ChatHistory::context($user->id);
-        if (count($histories) > 0) {
-            $messages = $histories;
-        } else {
-            $messages[] = [
-                "role" => "user",
-                "content" => $input['prompt']
-            ];
-        }
 
         $opts = [
             'model' => config('open.openai_model', 'gpt-3.5-turbo'),
-            'messages' => $messages,
+            'messages' => $input['messages'],
             'temperature' => 0,
             "max_tokens" => 150,
             "frequency_penalty" => 0,
