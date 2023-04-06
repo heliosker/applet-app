@@ -71,10 +71,14 @@ class Handler extends ExceptionHandler
             if ($e instanceof AuthenticationException) {
                 return error($e->getMessage(), 401);
             }
+
+            if ($request->isJson()) {
+                return error($e->getMessage(), 422);
+            }
+            
         } catch (Exception $e) {
             return error($e->getMessage(), 500);
         }
-
         return parent::render($request, $e);
     }
 
