@@ -62,10 +62,21 @@ class AiController extends Controller
             return error('您的次数已用完，请先获取次数。', 403);
         }
 
-        $ret = Cache::put('chat:' . $user->id, $input);
+        $ret = Cache::put($this->chatKey($user->id), $input);
 
         // 验证次数
-        return result($ret);
+        return result(['cache' => (bool)$ret]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function clear(Request $request): JsonResponse
+    {
+        $user = auth('api')->user();
+        $ret = Cache::forget($this->chatKey($user->id));
+        return result(['clear' => $ret]);
     }
 
     /**
@@ -77,14 +88,13 @@ class AiController extends Controller
     {
 
         $user = auth('api')->user();
-        $input = Cache::get('chat:' . $user->id);
+        $input = Cache::get($this->chatKey($user->id));
 
         if (empty($input['messages'])) {
             echo "event: error" . PHP_EOL;
             echo "data: Nothing.";
             exit();
         }
-
 
         $openAi = new OpenAi(config('open.openai_api_key'));
 
@@ -131,5 +141,15 @@ class AiController extends Controller
         }
 
         ChatHistory::webWrite($input['prompt'], $answer, $user->id);
+    }
+
+
+    /**
+     * @param int $uid
+     * @return string
+     */
+    protected function chatKey(int $uid): string
+    {
+        return 'chat:' . $uid;
     }
 }

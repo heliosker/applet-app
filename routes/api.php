@@ -35,9 +35,11 @@ Route::namespace('Api')->prefix('web')->group(function () {
 // WEB Token
 Route::namespace('Api')->middleware(['auth:api'])->prefix('web')->group(function () {
 
+    Route::get('stream/test', [AiController::class, 'stream']);
+
     Route::post('chat/prepare', [AiController::class, 'prepare']);
     Route::get('chat/completions', [AiController::class, 'completions']);
-    Route::get('stream/test', [AiController::class, 'stream']);
+    Route::delete('chat/clear', [AiController::class, 'clear']);
 
 
 });
