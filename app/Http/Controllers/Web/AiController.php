@@ -9,9 +9,32 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Orhanerday\OpenAi\OpenAi;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AiController extends Controller
 {
+
+    /**
+     * @return StreamedResponse
+     */
+    public function stream(): StreamedResponse
+    {
+        return response()->stream(function () {
+            $n = 10;
+            while ($n >= 0) {
+                $n--;
+                echo "data: " . time() . "
+";
+                ob_flush();
+                flush();
+                sleep(1);
+            }
+        }, 200, [
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+        ]);
+    }
 
     /**
      * @param Request $request

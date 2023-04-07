@@ -75,7 +75,7 @@ class Handler extends ExceptionHandler
             if ($request->isJson()) {
                 return error($e->getMessage(), 422);
             }
-            
+
         } catch (Exception $e) {
             return error($e->getMessage(), 500);
         }

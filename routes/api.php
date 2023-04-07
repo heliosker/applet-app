@@ -38,6 +38,8 @@ Route::namespace('Api')->middleware(['auth:api'])->prefix('web')->group(function
     Route::post('chat/prepare', [AiController::class, 'prepare']);
     Route::post('chat/completions', [AiController::class, 'completions']);
 
+    Route::get('stream/test', [AiController::class, 'stream']);
+
 });
 
 
