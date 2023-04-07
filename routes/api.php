@@ -38,7 +38,7 @@ Route::namespace('Api')->middleware(['auth:api'])->prefix('web')->group(function
     Route::get('stream/test', [AiController::class, 'stream']);
 
     Route::post('chat/prepare', [AiController::class, 'prepare']);
-    Route::get('chat/completions', [AiController::class, 'completions']);
+    Route::post('chat/completions', [AiController::class, 'completions']);
     Route::delete('chat/clear', [AiController::class, 'clear']);
 
 
