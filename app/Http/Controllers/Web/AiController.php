@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Web;
 
 use App\Models\ChatHistory;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Orhanerday\OpenAi\OpenAi;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AiController extends Controller
@@ -42,18 +42,6 @@ class AiController extends Controller
      */
     public function prepare(Request $request): JsonResponse
     {
-        $user = auth('api')->user();
-        // 验证次数
-        if (!$user->checkUsable()) {
-            return error('您的次数已用完，请先获取次数。', 403);
-        }
-
-        // 验证次数
-        return result();
-    }
-
-    public function completions(Request $request)
-    {
 
         $input = $request->all();
 
@@ -65,12 +53,39 @@ class AiController extends Controller
 
         if ($validator->fails()) {
             $err = (string)$validator->errors()->first();
-            echo "event: error" . PHP_EOL;
-            echo "data: $err";
-            exit();
+            return error($err, 422);
         }
 
         $user = auth('api')->user();
+        // 验证次数
+        if (!$user->checkUsable()) {
+            return error('您的次数已用完，请先获取次数。', 403);
+        }
+
+        $ret = Cache::put('chat:' . $user->id, $input);
+
+        // 验证次数
+        return result($ret);
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     * @throws \Exception
+     */
+    public function completions(Request $request)
+    {
+
+        $user = auth('api')->user();
+        $input = Cache::get('chat:' . $user->id);
+
+        if (empty($input['messages'])) {
+            echo "event: error" . PHP_EOL;
+            echo "data: Nothing.";
+            exit();
+        }
+
+
         $openAi = new OpenAi(config('open.openai_api_key'));
 
         $opts = [
