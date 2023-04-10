@@ -72,6 +72,14 @@ class Handler extends ExceptionHandler
                 return error($e->getMessage(), 401);
             }
 
+            // Event-stream
+            if ($request->header('Accept') == 'text/event-stream') {
+                $err = $e->getMessage();
+                echo "event: error" . PHP_EOL;
+                echo "data: $err";
+                exit();
+            }
+
             if ($request->isJson()) {
                 return error($e->getMessage(), 422);
             }

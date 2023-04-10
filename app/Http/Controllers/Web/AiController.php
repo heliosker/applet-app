@@ -113,6 +113,7 @@ class AiController extends Controller
                 flush();
                 return strlen($data);
             });
+            exit();
 
             // 记录
 //            $answer = '';
