@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => ['http://localhost:3000', 'http://47.103.204.136:3000', 'http://chat.helloadmin.cn'],
 
     'allowed_origins_patterns' => [],
 
