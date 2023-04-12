@@ -89,7 +89,7 @@ class AiController extends Controller
                 'model' => config('open.openai_model', 'gpt-3.5-turbo'),
                 'messages' => $input['messages'],
                 'temperature' => 0,
-                "max_tokens" => 150,
+//                "max_tokens" => 150,
                 "frequency_penalty" => 0,
                 "presence_penalty" => 0,
                 "stream" => true,
